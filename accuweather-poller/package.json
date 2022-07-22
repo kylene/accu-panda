@@ -1,0 +1,23 @@
+{
+  "name": "accu-panda",
+  "version": "1.0.0",
+  "description": "An integration to request the current weather conditions from AccuWeather and push the details as “alerts” into BigPanda.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kylene/accu-panda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kylene/accu-panda/issues"
+  },
+  "homepage": "https://github.com/kylene/accu-panda#readme",
+  "devDependencies": {
+    "axios": "^0.27.2",
+    "jest": "^28.1.3"
+  }
+}
