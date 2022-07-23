@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const accuWeatherService = require('./services/accuWeatherService');
 const accuPandaService = require('./services/accuPandaService');
 

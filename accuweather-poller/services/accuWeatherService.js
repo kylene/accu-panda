@@ -1,10 +1,5 @@
 const axios = require('axios');
 
-const accuWeatherBaseUrl = 'http://dataservice.accuweather.com';
-
-// TODO: move to env variables
-const accuWeatherApiKey = 'Q7FmHNhcT9oLhLirPaixbz5WFmgThFEz';
-
 // TODO: create classes for location entity and conditions
 
 async function getWeatherConditions(zipCode) {
@@ -21,7 +16,7 @@ async function getLocationKeyByZipCode(zipCode) {
         throw new Error('Zip Code must be 5 characters long.')
     }
 
-    const res = await axios.get(`${accuWeatherBaseUrl}/locations/v1/postalcodes/search?apikey=${accuWeatherApiKey}&q=${zipCode}`)
+    const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/locations/v1/postalcodes/search?apikey=${process.env.ACCUWEATHER_API_KEY}&q=${zipCode}`)
 
     if(res.status !== 200) {
         throw new Error(res.statusText)
@@ -41,7 +36,7 @@ async function getConditionsByLocationKey(locationKey) {
         throw new Error('No location key provided.')
     }
 
-    const res = await axios.get(`${accuWeatherBaseUrl}/currentconditions/v1/${locationKey}?apikey=${accuWeatherApiKey}`)
+    const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/currentconditions/v1/${locationKey}?apikey=${process.env.ACCUWEATHER_API_KEY}`)
 
     if(res.status !== 200) {
         throw new Error(res.statusText)
