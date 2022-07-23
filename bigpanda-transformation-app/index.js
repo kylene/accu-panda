@@ -1,32 +1,14 @@
-const aws = require('aws-sdk');
-const s3 = new aws.S3({ apiVersion: '2006-03-01' });
+const awsService = require('./services/awsService');
+// const bigPandaService = require('./services/bigPandaService');
 
 exports.handler = async function(event, context) {
-
     // event.Records.forEach(message => {
-    const sqsEvent = event.Records[0]
-    const sqsMessageBody = JSON.parse(sqsEvent.body)
-    const s3Event = sqsMessageBody.Records[0];
-    const bucket = s3Event.s3.bucket.name;
-    const key = s3Event.s3.object.key;
 
-    var params = {Bucket: bucket, Key: key};
+        // SQS batch size is currently set to 1, so we should only ever have 1 record
+        const sqsEvent = event.Records[0]
+        const conditions = await awsService.getConditionsFromS3(sqsEvent);
+        // const response = await bigPandaService.sendConditionsToBigPanda(conditions)
 
-    const result = await s3.getObject(params).promise()
-    console.log(result)
-    // s3.getObject(params, function(err, data) { 
-    //     console.log('S3.getObject called');
-
-    //     if (err) {
-    //         console.log(err, err.stack); // an error occurred
-    //         callback(err);
-    //     } else {
-    //         console.log(data);           // successful response
-    //         callback(null, null);
-    //     }
-    //     console.log('Leaving s3.getObject');
-    // });
-
-    // });
-    return {};
+        return {};
+    // }
 }

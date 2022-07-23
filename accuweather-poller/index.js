@@ -1,4 +1,5 @@
 const accuWeatherService = require('./services/accuWeatherService');
+const accuPandaService = require('./services/accuPandaService');
 
 const readline = require('readline').createInterface({
     input: process.stdin,
@@ -15,8 +16,8 @@ readline.question('Enter a zip code: ', async zipCode => {
         console.log("====================================")
         console.log(JSON.stringify(conditions))
 
-        // send to Big Panda
-        // bigPandaService.sendConditions
+        // send to AccuPanda API
+        await accuPandaService.sendConditions(conditions)
     } catch (e) {
         console.error(e.message)
     }
