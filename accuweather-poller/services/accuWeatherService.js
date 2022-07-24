@@ -2,13 +2,26 @@ const axios = require('axios');
 
 // TODO: create classes for location entity and conditions
 
-async function getWeatherConditions(zipCode) {
+async function getWeatherConditions(zipCodes) {
+    // get location keys
+    let locationKeysPromises = [];
 
-    // get location key
-    const locationKey = await getLocationKeyByZipCode(zipCode)
+    zipCodes.forEach(zipCode => {
+        const locationKeyPromise = getLocationKeyByZipCode(zipCode)
+        locationKeysPromises.push(locationKeyPromise);
+    })
+
+    const locationKeys = await Promise.all(locationKeysPromises)
 
     // get conditions by location key
-    return await getConditionsByLocationKey(locationKey);
+    const conditionsPromises = [];
+
+    locationKeys.forEach(locationKey => {
+        const conditionsPromise = getConditionsByLocationKey(locationKey)
+        conditionsPromises.push(conditionsPromise);
+    })
+
+    return await Promise.all(conditionsPromises)
 }
 
 async function getLocationKeyByZipCode(zipCode) {

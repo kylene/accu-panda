@@ -1,4 +1,5 @@
 require('dotenv').config();
+const demoZipCodes = require('./constants/zipCodes.json')
 
 const accuWeatherService = require('./services/accuWeatherService');
 const accuPandaService = require('./services/accuPandaService');
@@ -8,15 +9,14 @@ const readline = require('readline').createInterface({
     output: process.stdout
 });
 
-readline.question('Enter a zip code: ', async zipCode => {
-    console.log(`Fetching weather for zip code: ${zipCode}`);
+readline.question('Enter a metro area: ', async metroArea => {
+    console.log(`Fetching weather for metro area: ${metroArea}`);
     readline.close();
 
     try {
         // get AccuWeather conditions
-        const conditions = await accuWeatherService.getWeatherConditions(zipCode)
-        console.log("====================================")
-        console.log(JSON.stringify(conditions))
+        const zipCodes = demoZipCodes[metroArea];
+        const conditions = await accuWeatherService.getWeatherConditions(zipCodes)
 
         // send to AccuPanda API
         await accuPandaService.sendConditions(conditions)
