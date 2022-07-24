@@ -9,7 +9,7 @@ exports.handler = async function(event, context) {
         const sqsEvent = event.Records[0]
         const conditions = await awsService.getConditionsFromS3(sqsEvent);
         const bigPandaRequest = bigPandaService.createBigPandaAlertRequest(conditions);
-        // const response = await bigPandaService.sendConditionsAlertsToBigPanda(bigPandaRequest)
+        await bigPandaService.sendRequestToBigPanda(bigPandaRequest)
 
         return {};
     // }

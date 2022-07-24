@@ -7,40 +7,45 @@ const bigPandaAppKey = '8eb857809a461f877394a316a7f0fdcb';
 class BigPandaAlert {
     constructor(condition) {
         // this.app_key = bigPandaAppKey;
-        this.status = this.getAlertStatusByWeatherText(condition.WeatherText);
+        const { status, description } = this.getAlertStatusByTemperature(condition.Temperature.Imperial.Value);
+        this.status = status;
         this.timestamp = condition.EpochTime;
         this.primaryProperty = condition.LocationKey;
-        this.secondaryProperty = condition.WeatherText;
+        this.secondaryProperty = 'temperature';
+        this.description = description;
 
         Object.keys(condition).forEach(key => {
             if(key === 'Temperature') {
-                this['Temperate_Metric'] = `${condition.Temperature.Metric.Value} ${condition.Temperature.Metric.Unit}`
-                this['Temperate_Imperial'] = `${condition.Temperature.Imperial.Value} ${condition.Temperature.Imperial.Unit}`
+                this['Temperature_Metric'] = `${condition.Temperature.Metric.Value} ${condition.Temperature.Metric.Unit}`
+                this['Temperature_Imperial'] = `${condition.Temperature.Imperial.Value} ${condition.Temperature.Imperial.Unit}`
             }
 
-            this[key] = condition[key].toString();
+            this[key] = condition[key]?.toString();
         })
     };
 
-    getAlertStatusByWeatherText(weatherText) {
-        switch(weatherText) {
+    getAlertStatusByTemperature(temperature) {
+        switch(true) {
+            case temperature > 100:
+                return { status: 'critical', description: 'Temperature has exceeded 100 degrees.' };
+            case temperature > 90:
+                return { status: 'warning', description: 'Temperature has exceeded 90 degrees.' };
             default:
-                return "critical"
+                return 'ok'
         }
     }
 }
 
-async function sendConditionsToBigPanda(bigPandaRequest) {
+async function sendRequestToBigPanda(bigPandaRequest) {
     const res = await axios(bigPandaRequest)
 
-    if(res.status !== 200) {
+    if(res.status !== 201) {
         throw new Error(res.statusText)
     }
 
     return res.data;
 }
 
-// TODO complete transformConditions() method
 function createBigPandaAlertRequest(conditions) {
     return {
         method: 'post',
@@ -50,11 +55,9 @@ function createBigPandaAlertRequest(conditions) {
         },
         data: {
             app_key: bigPandaAppKey,
-            alerts: [
-                conditions.forEach(condition => {
-                    return new BigPandaAlert(condition);
-                })
-            ]
+            alerts: conditions.map(condition => {
+                return new BigPandaAlert(condition);
+            })
         }
     }
 }
@@ -62,6 +65,6 @@ function createBigPandaAlertRequest(conditions) {
 module.exports = {
     bigPandaUrl,
     bigPandaAppKey,
-    sendConditionsToBigPanda,
+    sendRequestToBigPanda,
     createBigPandaAlertRequest
 }
