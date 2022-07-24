@@ -27,6 +27,7 @@ async function getLocationKeyByZipCode(zipCode) {
         throw new Error('Zip Code must be 5 characters long.')
     }
 
+    // TODO: update this to include country code
     const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/locations/v1/postalcodes/search?apikey=${process.env.ACCUWEATHER_API_KEY}&q=${zipCode}`)
 
     if(res.status !== 200) {
