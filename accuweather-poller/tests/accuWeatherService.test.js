@@ -5,7 +5,7 @@ jest.mock("axios");
 
 describe('getLocationKeyByZipCode()', () => {
     test('zip code is not 5 characters => error is thrown', () => {
-        expect(() => getLocationKeyByZipCode('123456')).rejects.toThrowError('Zip Code must be 5 characters long.')
+        expect(() => getLocationKeyByZipCode('123456')).rejects.toThrowError('ZIP Code must be 5 characters long.')
     });
 
     test('response code is not 200 => error is thrown', () => {

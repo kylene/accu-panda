@@ -24,7 +24,7 @@ async function getWeatherConditions(zipCodes) {
 
 async function getLocationKeyByZipCode(zipCode) {
     if(zipCode.length !== 5) {
-        throw new Error('Zip Code must be 5 characters long.')
+        throw new Error('ZIP Code must be 5 characters long.')
     }
 
     // TODO: update this to include country code
@@ -54,7 +54,10 @@ async function getConditionsByLocationKey(locationKey) {
         throw new Error(res.statusText)
     }
 
-    return res.data;
+    return {
+        LocationKey: locationKey,
+        ...res.data[0]
+    };
 }
 
 module.exports = {

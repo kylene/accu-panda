@@ -1,5 +1,6 @@
 require('dotenv').config();
 const demoZipCodes = require('./constants/zipCodes.json')
+const metroAreas = require('./constants/metroArea.js');
 
 const accuWeatherService = require('./services/accuWeatherService');
 const accuPandaService = require('./services/accuPandaService');
@@ -14,6 +15,10 @@ readline.question('Enter a metro area: ', async metroArea => {
     readline.close();
 
     try {
+        if(!metroAreas.includes(metroArea)) {
+            throw new Error("Invalid metro area.");
+        }
+
         // get AccuWeather conditions
         const zipCodes = demoZipCodes[metroArea];
         const conditions = await accuWeatherService.getWeatherConditions(zipCodes)
@@ -21,7 +26,7 @@ readline.question('Enter a metro area: ', async metroArea => {
         // send to AccuPanda API
         await accuPandaService.sendConditions(conditions)
     } catch (e) {
-        console.error(e.message)
+        console.error(e)
     }
 });
 
