@@ -5,6 +5,7 @@ const bigPandaToken = '92867a91b9a5792f04ffd8282f3e6a65';
 const bigPandaAppKey = '8eb857809a461f877394a316a7f0fdcb';
 
 async function sendConditionsToBigPanda(conditions) {
+
     const bigPandaRequest = {
         method: 'post',
         url: bigPandaUrl,
@@ -29,6 +30,12 @@ async function sendConditionsToBigPanda(conditions) {
     return res.data;
 }
 
+// TODO complete transformConditions() method
+function transformConditions(conditions) {
+
+}
+
 module.exports = {
     sendConditionsToBigPanda,
+    transformConditions
 }

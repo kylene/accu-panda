@@ -1,7 +1,5 @@
 const axios = require('axios');
 
-// TODO: create classes for location entity and conditions
-
 async function getWeatherConditions(zipCodes) {
     // get location keys
     let locationKeysPromises = [];

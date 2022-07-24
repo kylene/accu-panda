@@ -12,7 +12,9 @@ async function sendConditions(conditions) {
 
     const res = await axios(accuPandaRequest)
 
-    return;
+    if(res.status !== 200) {
+        throw new Error(res.statusText)
+    }
 }
 
 module.exports = {

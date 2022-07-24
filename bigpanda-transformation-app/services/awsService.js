@@ -19,17 +19,9 @@ function parseSqsS3Event(sqsEvent) {
 
 async function getConditionsFromS3(sqsEvent) {
     const s3Object = parseSqsS3Event(sqsEvent);
-
-    // const params = { Bucket: s3Object.Bucket, Key: s3Object.key };
-
     const result = await s3.getObject(s3Object).promise()
-    // console.log(result)
-    // console.log(result.Body.toString())
-
     const message = JSON.parse(result.Body.toString())
     const conditions = message.body
-    // console.log(conditions);
-    // console.log(conditions.length);
 
     return conditions;
 }
