@@ -11,7 +11,7 @@ class BigPandaAlert {
         this.status = status;
         this.timestamp = condition.EpochTime;
         this.primaryProperty = condition.LocationKey;
-        this.secondaryProperty = 'temperature';
+        this.secondaryProperty = condition.WeatherText;
         this.description = description;
 
         Object.keys(condition).forEach(key => {
