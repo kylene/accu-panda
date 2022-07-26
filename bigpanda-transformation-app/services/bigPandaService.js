@@ -6,18 +6,18 @@ const bigPandaAppKey = '8eb857809a461f877394a316a7f0fdcb';
 
 class BigPandaAlert {
     constructor(condition) {
-        // this.app_key = bigPandaAppKey;
         const { status, description } = this.getAlertStatusByTemperature(condition.Temperature.Imperial.Value);
         this.status = status;
         this.timestamp = condition.EpochTime;
-        this.primaryProperty = condition.LocationKey;
-        this.secondaryProperty = condition.WeatherText;
+        this.primary_property = 'LocationKey';
+        this.secondary_property = 'WeatherText';
         this.description = description;
 
         Object.keys(condition).forEach(key => {
             if(key === 'Temperature') {
                 this['Temperature_Metric'] = `${condition.Temperature.Metric.Value} ${condition.Temperature.Metric.Unit}`
                 this['Temperature_Imperial'] = `${condition.Temperature.Imperial.Value} ${condition.Temperature.Imperial.Unit}`
+                return;
             }
 
             this[key] = condition[key]?.toString();
@@ -37,6 +37,7 @@ class BigPandaAlert {
 }
 
 async function sendRequestToBigPanda(bigPandaRequest) {
+    console.log(bigPandaRequest)
     const res = await axios(bigPandaRequest)
 
     if(res.status !== 201) {
@@ -54,10 +55,10 @@ function createBigPandaAlertRequest(conditions) {
             'Authorization': `Bearer ${bigPandaToken}`,
         },
         data: {
-            app_key: bigPandaAppKey,
-            alerts: conditions.map(condition => {
+            "app_key": bigPandaAppKey,
+            "alerts": JSON.parse(JSON.stringify(conditions.map(condition => {
                 return new BigPandaAlert(condition);
-            })
+            })))
         }
     }
 }

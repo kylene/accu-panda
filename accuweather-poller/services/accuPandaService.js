@@ -1,22 +1,22 @@
 const axios = require("axios");
 
-async function sendConditions(conditions) {
-    const accuPandaRequest = {
+async function postMessage(messageContents) {
+    const accuPandaPostMessageRequest = {
         method: 'post',
-        url: process.env.ACCUPANDA_API_URL,
+        url: `${process.env.ACCUPANDA_API_URL}/message`,
         headers: {
             'Content-Type': `application/json`
         },
-        data: conditions
+        data: messageContents
     }
 
-    const res = await axios(accuPandaRequest)
+    const res = await axios(accuPandaPostMessageRequest)
 
     if(res.status !== 200) {
-        throw new Error(res.statusText)
+        throw new Error(`Error getting location keys: ${res.status} ${res.statusText}`)
     }
 }
 
 module.exports = {
-    sendConditions,
+    postMessage,
 }

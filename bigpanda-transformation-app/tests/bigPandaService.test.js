@@ -43,8 +43,8 @@ describe("createBigPandaAlertRequest()", () => {
 
         expect(alert.status).toEqual('warning');
         expect(alert.timestamp).toEqual(1658620380);
-        expect(alert.primaryProperty).toEqual('32581_pc');
-        expect(alert.secondaryProperty).toEqual('temperature');
+        expect(alert.primary_property).toEqual('32581_pc');
+        expect(alert.secondary_property).toEqual('temperature');
         expect(alert.description).toEqual('Temperature has exceeded 90 degrees.');
         expect(alert.LocationKey).toEqual('32581_pc');
         expect(alert.LocalObservationDateTime).toEqual('2022-07-23T18:53:00-05:00');
