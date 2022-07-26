@@ -1,9 +1,5 @@
 const axios = require("axios");
 
-const bigPandaUrl = 'https://api.bigpanda.io/data/v2/alerts';
-const bigPandaToken = '92867a91b9a5792f04ffd8282f3e6a65';
-const bigPandaAppKey = '8eb857809a461f877394a316a7f0fdcb';
-
 class BigPandaAlert {
     constructor(condition) {
         const { status, description } = this.getAlertStatusByTemperature(condition.Temperature.Imperial.Value);
@@ -14,6 +10,11 @@ class BigPandaAlert {
         this.description = description;
 
         Object.keys(condition).forEach(key => {
+            // this is reflected in the timestamp, removed for redundancy
+            if(key === 'EpochTime') {
+                return;
+            }
+
             if(key === 'Temperature') {
                 this['Temperature_Metric'] = `${condition.Temperature.Metric.Value} ${condition.Temperature.Metric.Unit}`
                 this['Temperature_Imperial'] = `${condition.Temperature.Imperial.Value} ${condition.Temperature.Imperial.Unit}`
@@ -31,17 +32,21 @@ class BigPandaAlert {
             case temperature > 90:
                 return { status: 'warning', description: 'Temperature has exceeded 90 degrees.' };
             default:
-                return 'ok'
+                return { status: 'ok' }
         }
     }
 }
 
-async function sendRequestToBigPanda(bigPandaRequest) {
-    console.log(bigPandaRequest)
+async function sendRequestToBigPanda(bigPandaRequest, logger) {
+    logger.log({
+        level: 'info',
+        message: bigPandaRequest
+    });
+
     const res = await axios(bigPandaRequest)
 
-    if(res.status !== 201) {
-        throw new Error(res.statusText)
+    if(res.status > 204) {
+        throw new Error(`Error sending request to BigPanda: ${res.status} ${res.statusText}`)
     }
 
     return res.data;
@@ -50,22 +55,20 @@ async function sendRequestToBigPanda(bigPandaRequest) {
 function createBigPandaAlertRequest(conditions) {
     return {
         method: 'post',
-        url: bigPandaUrl,
+        url: process.env.BIG_PANDA_URL,
         headers: {
-            'Authorization': `Bearer ${bigPandaToken}`,
+            'Authorization': `Bearer ${process.env.BIG_PANDA_TOKEN}`,
         },
         data: {
-            "app_key": bigPandaAppKey,
-            "alerts": JSON.parse(JSON.stringify(conditions.map(condition => {
+            "app_key": process.env.BIG_PANDA_APP_KEY,
+            "alerts": conditions.map(condition => {
                 return new BigPandaAlert(condition);
-            })))
+            })
         }
     }
 }
 
 module.exports = {
-    bigPandaUrl,
-    bigPandaAppKey,
     sendRequestToBigPanda,
     createBigPandaAlertRequest
 }

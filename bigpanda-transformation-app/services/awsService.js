@@ -17,15 +17,14 @@ function parseSqsS3Event(sqsEvent) {
     return new S3Object(bucket, key);
 }
 
-async function getConditionsFromS3(sqsEvent) {
-    const s3Object = parseSqsS3Event(sqsEvent);
+async function getJSONFromS3(s3Object) {
     const result = await s3.getObject(s3Object).promise()
     const message = JSON.parse(result.Body.toString())
-    const conditions = message.body
 
-    return conditions;
+    return message.body;
 }
 
 module.exports = {
-    getConditionsFromS3
+    parseSqsS3Event,
+    getJSONFromS3
 }
