@@ -41,6 +41,11 @@ readline.question('Enter a metro area: ', async metroArea => {
 
         const zipCodes = demoZipCodes[metroArea];
 
+        logger.log({
+            level: 'info',
+            message: `${metroArea} ZIP Codes: ${zipCodes.join(', ')}`
+        })
+
         // get location keys for each ZIP code
         let locationKeysPromises = [];
 
@@ -51,6 +56,11 @@ readline.question('Enter a metro area: ', async metroArea => {
 
         const locationKeys = await Promise.all(locationKeysPromises)
 
+        logger.log({
+            level: 'info',
+            message: `${metroArea} Location Keys: ${locationKeys.join(', ')}`
+        })
+
         // get conditions by location key
         const conditionsPromises = [];
 
@@ -60,6 +70,11 @@ readline.question('Enter a metro area: ', async metroArea => {
         })
 
         const conditions = await Promise.all(conditionsPromises)
+
+        logger.log({
+            level: 'info',
+            message: conditions
+        })
 
         // send to AccuPanda API
         await accuPandaService.postMessage(conditions)

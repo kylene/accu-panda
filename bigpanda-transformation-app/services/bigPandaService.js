@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+const STATUS_WARNING = 'warning';
+const STATUS_CRITICAL = 'critical'
+
 class BigPandaAlert {
     constructor(condition) {
         const { status, description } = this.getAlertStatusByTemperature(condition.Temperature.Imperial.Value);
@@ -28,11 +31,9 @@ class BigPandaAlert {
     getAlertStatusByTemperature(temperature) {
         switch(true) {
             case temperature > 100:
-                return { status: 'critical', description: 'Temperature has exceeded 100 degrees.' };
-            case temperature > 90:
-                return { status: 'warning', description: 'Temperature has exceeded 90 degrees.' };
+                return { status: STATUS_CRITICAL, description: 'Temperature has exceeded 100 degrees.' };
             default:
-                return { status: 'ok' }
+                return { status: STATUS_WARNING, description: 'Temperature is elevated.' };
         }
     }
 }
